@@ -105,6 +105,10 @@ bool Config::load() {
   if (parsedJson["mqtt"].as<JsonObject&>().containsKey("port")) {
     reqMqttPort = parsedJson["mqtt"]["port"];
   }
+  bool reqMqttSecure = true;
+  if (parsedJson["mqtt"].as<JsonObject&>().containsKey("secure")) {
+    reqMqttSecure = parsedJson["mqtt"]["secure"] == "true";
+  }
   const char* reqMqttBaseTopic = DEFAULT_MQTT_BASE_TOPIC;
   if (parsedJson["mqtt"].as<JsonObject&>().containsKey("base_topic")) {
     reqMqttBaseTopic = parsedJson["mqtt"]["base_topic"];
@@ -141,6 +145,7 @@ bool Config::load() {
   strlcpy(_configStruct.wifi.dns2, reqWifiDns2, MAX_IP_STRING_LENGTH);
   strlcpy(_configStruct.mqtt.server.host, reqMqttHost, MAX_HOSTNAME_LENGTH);
   _configStruct.mqtt.server.port = reqMqttPort;
+  _configStruct.mqtt.server.secure = reqMqttSecure;
   strlcpy(_configStruct.mqtt.baseTopic, reqMqttBaseTopic, MAX_MQTT_BASE_TOPIC_LENGTH);
   _configStruct.mqtt.auth = reqMqttAuth;
   strlcpy(_configStruct.mqtt.username, reqMqttUsername, MAX_MQTT_CREDS_LENGTH);
@@ -339,6 +344,7 @@ void Config::log() const {
   Interface::get().getLogger() << F("  • MQTT: ") << endl;
   Interface::get().getLogger() << F("    ◦ Host: ") << _configStruct.mqtt.server.host << endl;
   Interface::get().getLogger() << F("    ◦ Port: ") << _configStruct.mqtt.server.port << endl;
+  Interface::get().getLogger() << F("    ◦ Secure: ") << _configStruct.mqtt.server.secure << endl;
   Interface::get().getLogger() << F("    ◦ Base topic: ") << _configStruct.mqtt.baseTopic << endl;
   Interface::get().getLogger() << F("    ◦ Auth? ") << (_configStruct.mqtt.auth ? F("yes") : F("no")) << endl;
   if (_configStruct.mqtt.auth) {

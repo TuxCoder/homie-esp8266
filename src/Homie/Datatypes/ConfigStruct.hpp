@@ -25,6 +25,7 @@ struct ConfigStruct {
     struct Server {
       char host[MAX_HOSTNAME_LENGTH];
       uint16_t port;
+      bool secure;
     } server;
     char baseTopic[MAX_MQTT_BASE_TOPIC_LENGTH];
     bool auth;
